@@ -49,7 +49,7 @@ ln -s ../tophat_out/accepted_hits.bam
 samtools sort -@2 -m 2g -o accepted_hits.sort.bam accepted_hits.bam
 samtools merge fe.sorted.bam ../04.filt/SRR4308259/accepted_hits.sort.bam ../accepted_hits.sort.bam ../04.filt/SRR4308246/accepted_hits.sort.bam
 samtools depth -Q 30 fe.sorted.bam | awk '{print $1"\t"$2-1"\t"$2"\t"$3}' | sort -k1,1 -k2,2n >  fe_depth_per_base.bed
-##只取per_base_count>5 loci
+##keep per_base_count>5 loci
 awk '$4>5{print $1}' fe_depth_per_base.bed | sort | uniq -c | awk '{print $2,$1}' | sort -k1,1 > fe.cov.length 
 bioawk -c fastx '{ print $name, length($seq) }' Trinity.keep.fasta | sort -k1,1 > Trinity.keep.fasta.length
 join fe.cov.length Trinity.keep.fasta.length | awk '{print $0,$2/$3}' | awk '$4<0.5' | awk '{print ">"$1}' > Trinity.afterfecov.keep.contig
@@ -60,7 +60,7 @@ hisat2-build Trinity.afterfecov.keep.fasta Trinity.afterfecov.keep.fasta
 hisat2 -x Trinity.afterfecov.keep.fasta -1 ERR279690_1.fastq.gz -2 ERR279690_2.fastq.gz -p 12 | samtools view -b -@ 12 - -o m.bam
 samtools sort -@2 -m 2g -o m.sort.bam m.bam
 samtools depth m.sort.bam | awk '{print $1"\t"$2-1"\t"$2"\t"$3}' | sort -k1,1 -k2,2n >  m_depth_per_base.bed
-##只取per_base_count>5 loci
+##keep per_base_count>5 loci
 awk '$4>5{print $1}' m_depth_per_base.bed | sort | uniq -c | awk '{print $2,$1}' | sort -k1,1 > m.cov.length 
 ln -s ../../03.align/Trinity.keep.fasta
 bioawk -c fastx '{ print $name, length($seq) }' Trinity.afterfecov.keep.fasta | sort -k1,1 > Trinity.afterfecov.keep.fasta.length
