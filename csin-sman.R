@@ -104,7 +104,7 @@ Csingonadhigh <- Csingonadhigh1[!duplicated(Csingonadhigh1$Gene),]
 Csin_f_low<-subset(RPKM2,(RPKM2$mucle)>2*(RPKM2$fg) & RPKM2$mucle>2 & RPKM2$fg<1)
 Csin_m_low<-subset(RPKM2,(RPKM2$mucle)>2*(RPKM2$mg) & RPKM2$mucle>2 & RPKM2$mg<1)
 Csingonadlow1<-rbind(Csin_f_low,Csin_m_low)
-Csingonadlow <- Csingonadlow1[!duplicated(Csingonadlow1$Gene),]  ##会与Csingonadhigh有重复，去除
+Csingonadlow <- Csingonadlow1[!duplicated(Csingonadlow1$Gene),]  #
 Csingonadlow = Csingonadlow[!rownames(Csingonadlow) %in% rownames(Csingonadhigh),] 
 
 #######subtract Csin candidate gonad-soma similiar exp gene
@@ -360,7 +360,7 @@ combines0_4$g<-"c4" #red
 combines0_com<-rbind(combines0_4,combines0_3,combines0_2,combines0_1)
 head(combines0_com)
 
-#数目发生变化的大概只在csin low，发生上调的那些gene
+#####
 combines0_com = combines0_4[rownames(combines0_4) %in% rownames(Csingonadlow),] 
 #
 
@@ -476,7 +476,7 @@ combines0_gonadhigh_formassig<-rbind(combines0_gonadhigh_demas,combines0_gonadhi
 
 
 
-library(VennDiagram)        ##花瓣韦恩图，最多六项
+library(VennDiagram)       
 p<-venn.diagram(list("demasculinization"= combines0_gonadhigh_demas$smangene,
                      "masculinization" = combines0_gonadhigh_mas$smangene,
                      "defeminization" = combines0_gonadhigh_defem$smangene,
@@ -731,23 +731,3 @@ CsinAtpm_csd
 #"Tm1G004760" "Tm1G003109" "Tm1G003937" "Tm1G005504" "Tm1G000698" "Tm1G001327" "Tm1G001612" "Tm1G000937" "Tm4G009474" "Tm2G007350"
 ########
 
-
-#######gonad regression line，not good
-combinebo<-combine1[c(4,11)]
-combinebt<-combine1[c(5,11)]
-head(combinebo)
-combinebo$group<-"Smanbo"
-combinebt$group<-"Smanbt"
-colnames(combinebo)<-c("Sman","Csinfg","group")
-colnames(combinebt)<-c("Sman","Csinfg","group")
-
-combinebobt<-rbind(combinebo,combinebt)
-ggplot(combinebobt,aes(x=log10(Csinfg+1), y=log10(Sman+1), color=group))+geom_point(alpha=0.3,size=2) + geom_smooth(method="gam",se=FALSE,formula = y ~ x)+scale_color_manual(values=c("#228B22","#80B1D3","#DADA00","#BEBADA"))+
-  #scale_x_continuous(limits = c(0,15))+scale_y_continuous(limits = c(0,15))+theme_classic()+
-  stat_poly_eq(
-    aes(label = paste(..eq.label.., ..adj.rr.label.., sep = '~~~~')),
-    formula = y ~ x,  parse = TRUE,
-    size = 5, #公式字体大小
-    label.x = 0.1,  #位置 ，0-1之间的比例
-    label.y = 0.95)+
-  theme_classic()
