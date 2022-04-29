@@ -7,7 +7,6 @@
 #!/usr/bin/perl -w
 use strict;
 die "perl $0 <genome> <_1.fastq.gz> <_2.fastq.gz>" unless @ARGV==3;
-## ',\,$,",>都需要\转义符，{}不需要
 
 my $g = $ARGV[0];
 my $r1 = $ARGV[1];
